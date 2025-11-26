@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Twilio Voice Bot - Call Launcher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      background: #f7fafc;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+      width: 350px;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e0;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    #status {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>📞 Start Voice Bot Call</h2>
+    
+    <input id="phone" type="text" placeholder="+91XXXXXXXXXX" />
+
+    <button onclick="startCall()">Call Now</button>
+
+    <div id="status"></div>
+  </div>
+
+  <script>
+    async function startCall() {
+      const phone = document.getElementById("phone").value;
+      const status = document.getElementById("status");
+
+      if (!phone) {
+        status.innerText = "❌ Enter phone number";
+        status.style.color = "red";
+        return;
+      }
+
+      status.innerText = "📡 Calling...";
+      status.style.color = "black";
+
+      try {
+        const res = await fetch("/call/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: "to=" + encodeURIComponent(phone),
+        });
+
+        const data = await res.json();
+        status.innerText = "✅ Call initiated — SID: " + data.call_sid;
+        status.style.color = "green";
+      } catch (err) {
+        status.innerText = "❌ Error initiating call";
+        status.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
