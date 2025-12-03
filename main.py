@@ -16,7 +16,6 @@ port = 8000
 app = FastAPI()
 
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
@@ -53,4 +52,5 @@ async def start_call(to: str = Form(...)):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host=host, port=port)
+
     
